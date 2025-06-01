@@ -1,4 +1,8 @@
 /* Base */
+*, *::before, *::after {
+  box-sizing: border-box; /* More intuitive box model */
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -9,6 +13,7 @@ html, body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden; /* Prevent horizontal scrollbars if something unexpectedly overflows */
 }
 
 main {
@@ -60,13 +65,11 @@ p {
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem); /* Responsive font size */
   text-align: center;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  width: 90%; /* Ensure text wraps on smaller screens */
 }
-
-
-
 
 /* Desktop Navigation */
 .desktop-nav {
@@ -145,7 +148,7 @@ p {
 }
 
 .nav-overlay a {
-  font-size: 2rem;
+  font-size: 2rem; /* Could also be made responsive if needed, e.g., clamp(1.5rem, 5vw, 2rem) */
   color: white;
   text-decoration: none;
   font-weight: 600;
@@ -173,7 +176,12 @@ p {
 
 /* Hero Section */
 .hero {
-  padding: 4rem 2rem;
+  padding: 2rem 1rem; /* Default for smaller screens */
+}
+@media (min-width: 768px) {
+  .hero {
+    padding: 4rem 2rem; /* Restore for larger screens */
+  }
 }
 
 .hero-row {
@@ -188,19 +196,19 @@ p {
 
 .hero-text {
   flex: 1 1 55%;
-  min-width: 280px;
+  min-width: 280px; /* Ensures it doesn't get too squished before wrapping */
   text-align: left;
 }
 
 .hero-text h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
   margin-bottom: 1rem;
 }
 
 .hero-text p {
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem); /* Responsive font size */
   margin-bottom: 1rem;
   text-align: justify;
-  font-size: 1.1rem;
   line-height: 1.6;
 }
 
@@ -213,6 +221,7 @@ p {
 
 .hero-image img {
   max-width: 100%;
+  height: auto; /* Ensure aspect ratio is maintained */
   max-height: 400px;
   object-fit: cover;
   border-radius: 8px;
@@ -228,28 +237,22 @@ p {
 
   .hero-text,
   .hero-image {
-    flex: 1 1 100%;
+    flex: 1 1 100%; /* Each takes full width when stacked */
   }
 
   .hero-text p {
-    text-align: left;
+    text-align: left; /* Keep paragraph text left-aligned for readability */
   }
 }
 
-/* Animated name */
+/*
 #animated-name {
-  font-weight: 700;
-  border-right: 2px solid #0a2540;
-  padding-right: 4px;
+  display: inline-block;
   white-space: nowrap;
   overflow: hidden;
-  animation: blink 0.75s step-end infinite;
+  font-weight: 700;
 }
-
-@keyframes blink {
-  from, to { border-color: transparent; }
-  50% { border-color: #0a2540; }
-}
+*/
 
 /* Social Icons */
 .social-icons {
@@ -285,48 +288,90 @@ p {
   background: #f9f9f9;
   padding: 2rem 1rem;
   text-align: center;
+  overflow: hidden;
 }
 
-.gallery-strip {
+.gallery-wrapper {
+  overflow: hidden;
+  max-width: 100%; /* Ensures wrapper is constrained by parent's width */
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.gallery-track {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
+  width: max-content; /* Allows track to be wider than viewport for scrolling all slides */
+  gap: 1rem; /* Space between slides */
+  animation: scrollGalleryDesktop 30s linear infinite;
 }
 
-.gallery-image {
-  flex: 1 1 150px;
-  max-width: 180px;
-  opacity: 0.8;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+.gallery-slide {
+  flex-shrink: 0; /* Prevent slides from shrinking */
+  flex-grow: 0; /* Prevent slides from growing */
+  /* Desktop styling */
+  flex-basis: 45%; /* Approximate width, max-width will enforce */
+  max-width: 18rem;
 }
 
-.gallery-image img {
+.gallery-slide img {
   width: 100%;
+  height: auto; /* Maintain aspect ratio */
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  object-fit: cover;
+  display: block; /* Remove extra space below image */
+  transition: transform 0.4s ease;
 }
 
-.gallery-image:hover {
-  transform: scale(1.05);
-  opacity: 1;
+.gallery-slide:hover img {
+  transform: scale(1.03);
 }
 
-/* Blog Section */
+@keyframes scrollGalleryDesktop {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Scrolls half the track for seamless loop with duplicates */
+}
+
+@media (max-width: 768px) {
+  .gallery-slide {
+    width: 80vw; /* Each slide takes 80% of the viewport width */
+    max-width: 320px; /* Optional: cap the width on larger "mobile" screens if 80vw is too much */
+    flex-basis: auto; /* Reset flex-basis, width property will take precedence */
+  }
+
+  .gallery-track {
+    animation-name: scrollGalleryMobile; /* Use mobile-specific animation name if different duration/logic needed */
+    animation-duration: 40s; /* Can adjust duration for mobile */
+  }
+
+  @keyframes scrollGalleryMobile {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* Corrected: Should also be -50% for seamless loop with duplicates */
+  }
+}
+
+
+/* Blog Section & General Section Styling */
 .section {
-  padding: 4rem 2rem;
+  padding: 2rem 1rem; /* Default for smaller screens */
   max-width: 900px;
   margin: 0 auto;
 }
+@media (min-width: 768px) {
+  .section {
+    padding: 4rem 2rem; /* Restore for larger screens */
+  }
+}
 
 .section h2 {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem); /* Responsive font size */
   margin-bottom: 1rem;
 }
 
 .blog-list {
   display: grid;
   gap: 2rem;
+  /* On small screens, grid defaults to single column which is good */
 }
 
 .blog-post {
@@ -338,6 +383,7 @@ p {
 
 .blog-post h3 {
   margin: 0 0 0.5rem;
+  font-size: clamp(1.1rem, 3vw, 1.4rem); /* Responsive blog post titles */
 }
 
 .blog-post .date {
@@ -348,10 +394,15 @@ p {
 /* Contact Page */
 .contact-section {
   background-color: #f3f8fe;
-  padding: 4rem 2rem;
+  padding: 2rem 1rem; /* Default for smaller screens */
   max-width: 800px;
   margin: auto;
   text-align: center;
+}
+@media (min-width: 768px) {
+  .contact-section {
+    padding: 4rem 2rem; /* Restore for larger screens */
+  }
 }
 
 .contact-form {
@@ -364,16 +415,17 @@ p {
 .form-row {
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Ensures inputs stack on smaller screens */
 }
 
 .form-row input {
-  flex: 1 1 48%;
+  flex: 1 1 calc(50% - 0.5rem); /* Adjust for gap, ensures two inputs fit side-by-side if space allows */
+  min-width: 200px; /* Prevent inputs from becoming too small */
 }
 
 .contact-form input,
 .contact-form textarea {
-  width: 100%;
+  width: 100%; /* Fallback, flex properties on .form-row input will manage width */
   padding: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -404,18 +456,11 @@ p {
 /* Footer */
 .site-footer {
   text-align: center;
-  padding: 2rem;
-  background-color: #f0f0f0;
+  padding: 2rem 1rem; /* Consistent padding */
   font-size: 0.9rem;
   margin-top: auto;
-}
-
-.site-footer {
   background-color: #0a2540;
   color: #fff;
-  padding: 2rem 1rem;
-  text-align: center;
-  font-size: 0.9rem;
 }
 
 .footer-content {
@@ -458,91 +503,46 @@ p {
 .footer-socials a:hover {
   color: #64b5f6;
 }
-.gallery-section {
-  background: #f9f9f9;
-  padding: 2rem 1rem;
-  text-align: center;
-  overflow: hidden;
-}
 
-.gallery-wrapper {
-  overflow: hidden;
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-
-.gallery-track {
+/* Timeline Sections */
+.timeline-section, .timeline-container { /* Consolidating common styles */
   display: flex;
-  gap: 1rem;
-  width: max-content;
-  animation: scrollGalleryDesktop 30s linear infinite;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto; /* Changed from 'auto' to '0 auto' for consistency */
+  padding: 2rem 1rem; /* Default padding */
 }
-
-.gallery-slide {
-  flex: 0 0 45%;
-  max-width: 18rem;
-}
-
-.gallery-slide img {
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.gallery-slide:hover img {
-  transform: scale(1.03);
-}
-
-/* Desktop keyframes: show 2 slides per frame */
-@keyframes scrollGalleryDesktop {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Mobile: show only 1 image at a time and loop */
-@media (max-width: 768px) {
-  .gallery-slide {
-    flex: 0 0 100%;
-    max-width: 80;
-  }
-
-  .gallery-track {
-    animation: scrollGalleryMobile 40s linear infinite;
-  }
-
-  @keyframes scrollGalleryMobile {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
+@media (min-width: 768px) {
+  .timeline-section, .timeline-container {
+    padding: 3rem 1rem; /* Larger padding for larger screens */
   }
 }
-
 
 
 .timeline-section {
-  display: flex;
   gap: 4rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 3rem 1rem;
-  max-width: 1200px;
-  margin: auto;
+}
+
+.timeline-container {
+  gap: 3rem;
 }
 
 .timeline-column {
-  flex: 1 1 450px;
+  flex: 1 1 45%;
+  min-width: 300px; /* Ensures columns don't get too narrow before stacking */
 }
 
 .timeline-column h2 {
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
+  font-size: clamp(1.4rem, 3.5vw, 1.8rem); /* Responsive font size */
+  margin-bottom: 1.5rem; /* Consistent margin */
   color: #0a2540;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid #eee; /* Added for visual separation if desired */
   padding-bottom: 0.5rem;
 }
+/* If .timeline-container h2 needs different styling, specify: */
+/* .timeline-container .timeline-column h2 { ... } */
+
 
 .timeline-item {
   display: flex;
@@ -576,53 +576,59 @@ p {
 }
 
 .timeline-content h3 {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 2.8vw, 1.2rem); /* Responsive timeline item titles */
   margin-bottom: 0.3rem;
   color: #0a2540;
 }
 
-.timeline-content h3 span {
+.timeline-content h3 span { /* Company/subtitle */
   font-weight: 400;
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 2.2vw, 0.95rem);
   color: #444;
   display: block;
+  margin-top: 0.2rem;
 }
 
-.timeline-content p {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
+.timeline-content p { /* Description */
+  margin: 0.5rem 0 0;
+  font-size: clamp(0.85rem, 2.3vw, 0.95rem);
+  line-height: 1.5; /* Increased line-height slightly for readability */
 }
 
-/* Mobile stacking */
+/* General span inside timeline-content (if used for other purposes) */
+.timeline-content span:not(h3 span) {
+  display: block;
+  font-weight: 400;
+  font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+  color: #666;
+}
+
+
 @media (max-width: 768px) {
-  .timeline-section {
-    flex-direction: column;
+  .timeline-section, .timeline-container {
+    flex-direction: column; /* Stack columns on mobile */
     gap: 2rem;
   }
 
   .timeline-column {
-    flex: 1 1 100%;
+    flex: 1 1 100%; /* Column takes full width */
   }
 
-  .timeline-item {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .timeline-content h3 span {
-    display: inline;
-  }
+  /* .timeline-item structure remains flex-row, which is fine */
+  /* .timeline-content h3 span already 'block', can be 'inline' if preferred on mobile for shorter text */
+  /* .timeline-content h3 span { display: inline; } */
 }
 
 .timeline-logo {
   width: 48px;
   height: 48px;
+  /* Consider adding margin if it's part of .timeline-item and needs spacing */
 }
 
 .timeline-logo img {
-  width: 90%;
-  height: 90%;
+  width: 100%; /* Use 100% to fill the container */
+  height: 100%;
+  object-fit: contain; /* Ensures logo is scaled correctly within its box */
 }
 
 .experience-logos {
@@ -630,17 +636,18 @@ p {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1.5rem;
-  padding: 1rem 2rem;
+  gap: 1.5rem; /* Spacing between logos */
+  padding: 1.5rem; /* Padding around the logo group */
   margin: 2rem auto 3rem;
   max-width: 900px;
-  background: #979799;
+  background: #f0f0f0; /* Lighter background for contrast */
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .experience-logos img {
-  height: 40px;
+  height: 40px; /* Default height */
+  max-width: 100px; /* Prevent very wide logos from taking too much space */
   object-fit: contain;
   transition: transform 0.3s ease;
 }
@@ -651,63 +658,10 @@ p {
 
 @media (max-width: 768px) {
   .experience-logos img {
-    height: 32px;
+    height: 32px; /* Slightly smaller logos on mobile */
+  }
+  .experience-logos {
+    gap: 1rem; /* Reduce gap on mobile */
+    padding: 1rem;
   }
 }
-
-.timeline-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 3rem;
-  flex-wrap: wrap;
-  padding: 2rem 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.timeline-column {
-  flex: 1 1 45%;
-  min-width: 300px;
-}
-
-.timeline-column h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  color: #0a2540;
-}
-
-.timeline-item {
-  margin-bottom: 1.5rem;
-}
-
-.timeline-content h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.3rem;
-}
-
-.timeline-content span {
-  display: block;
-  font-weight: 400;
-  font-size: 0.95rem;
-  color: #666;
-}
-
-.timeline-content p {
-  margin: 0.5rem 0 0;
-  font-size: 1rem;
-  line-height: 1.4;
-}
-
-/* Responsive stacking on mobile */
-@media (max-width: 768px) {
-  .timeline-container {
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .timeline-column {
-    flex: 1 1 100%;
-  }
-}
-
