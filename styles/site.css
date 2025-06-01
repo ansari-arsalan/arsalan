@@ -89,33 +89,37 @@ p {
 
 /* Hamburger Menu */
 .hamburger {
-  display: none;
+  display: none; /* Hidden by default, shown in media query */
   flex-direction: column;
-  justify-content: space-between;
-  width: 24px;
-  height: 20px;
+  justify-content: space-around; /* Adjusted for better span distribution with padding */
+  width: 30px;  /* Increased width */
+  height: 24px; /* Increased height */
   background: none;
   border: none;
   cursor: pointer;
+  padding: 4px 2px; /* Added padding to increase tap area and visual separation */
   z-index: 1001;
+  box-sizing: content-box; /* Ensure padding adds to width/height if that's intended for tap area */
 }
 
 .hamburger span {
-  height: 3px;
+  height: 3px; /* Increased height/thickness of lines */
+  width: 100%; /* Ensure spans take full width of the button */
   background: white;
-  border-radius: 2px;
+  border-radius: 2px; /* Slightly larger radius for thicker lines */
   transition: all 0.3s ease;
   display: block;
 }
 
+/* Adjustments for active (X) state if lines are thicker */
 .hamburger.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
+  transform: rotate(45deg) translate(4px, 5px); /* Adjusted translate for thicker lines */
 }
 .hamburger.active span:nth-child(2) {
   opacity: 0;
 }
 .hamburger.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
+  transform: rotate(-45deg) translate(4px, -5px); /* Adjusted translate for thicker lines */
 }
 
 /* Mobile Navigation Overlay */
@@ -148,7 +152,7 @@ p {
 }
 
 .nav-overlay a {
-  font-size: 2rem; /* Could also be made responsive if needed, e.g., clamp(1.5rem, 5vw, 2rem) */
+  font-size: 2rem;
   color: white;
   text-decoration: none;
   font-weight: 600;
@@ -166,21 +170,21 @@ p {
   }
 
   .hamburger {
-    display: flex;
+    display: flex; /* Show hamburger on mobile */
   }
 
   .nav-overlay {
-    display: flex;
+    display: flex; /* Ensure overlay is flex for centering content */
   }
 }
 
 /* Hero Section */
 .hero {
-  padding: 2rem 1rem; /* Default for smaller screens */
+  padding: 2rem 1rem;
 }
 @media (min-width: 768px) {
   .hero {
-    padding: 4rem 2rem; /* Restore for larger screens */
+    padding: 4rem 2rem;
   }
 }
 
@@ -196,17 +200,17 @@ p {
 
 .hero-text {
   flex: 1 1 55%;
-  min-width: 280px; /* Ensures it doesn't get too squished before wrapping */
+  min-width: 280px;
   text-align: left;
 }
 
 .hero-text h1 {
-  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
   margin-bottom: 1rem;
 }
 
 .hero-text p {
-  font-size: clamp(0.9rem, 2.5vw, 1.1rem); /* Responsive font size */
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
   margin-bottom: 1rem;
   text-align: justify;
   line-height: 1.6;
@@ -221,14 +225,13 @@ p {
 
 .hero-image img {
   max-width: 100%;
-  height: auto; /* Ensure aspect ratio is maintained */
+  height: auto;
   max-height: 400px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Mobile Hero Layout */
 @media (max-width: 768px) {
   .hero-row {
     flex-direction: column;
@@ -237,11 +240,11 @@ p {
 
   .hero-text,
   .hero-image {
-    flex: 1 1 100%; /* Each takes full width when stacked */
+    flex: 1 1 100%;
   }
 
   .hero-text p {
-    text-align: left; /* Keep paragraph text left-aligned for readability */
+    text-align: left;
   }
 }
 
@@ -293,33 +296,32 @@ p {
 
 .gallery-wrapper {
   overflow: hidden;
-  max-width: 100%; /* Ensures wrapper is constrained by parent's width */
+  max-width: 100%;
   margin: 0 auto;
   padding: 2rem 0;
 }
 
 .gallery-track {
   display: flex;
-  width: max-content; /* Allows track to be wider than viewport for scrolling all slides */
-  gap: 1rem; /* Space between slides */
+  width: max-content;
+  gap: 1rem;
   animation: scrollGalleryDesktop 30s linear infinite;
 }
 
 .gallery-slide {
-  flex-shrink: 0; /* Prevent slides from shrinking */
-  flex-grow: 0; /* Prevent slides from growing */
-  /* Desktop styling */
-  flex-basis: 45%; /* Approximate width, max-width will enforce */
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: 45%;
   max-width: 18rem;
 }
 
 .gallery-slide img {
   width: 100%;
-  height: auto; /* Maintain aspect ratio */
+  height: auto;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   object-fit: cover;
-  display: block; /* Remove extra space below image */
+  display: block;
   transition: transform 0.4s ease;
 }
 
@@ -329,49 +331,48 @@ p {
 
 @keyframes scrollGalleryDesktop {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); } /* Scrolls half the track for seamless loop with duplicates */
+  100% { transform: translateX(-50%); }
 }
 
 @media (max-width: 768px) {
   .gallery-slide {
-    width: 80vw; /* Each slide takes 80% of the viewport width */
-    max-width: 320px; /* Optional: cap the width on larger "mobile" screens if 80vw is too much */
-    flex-basis: auto; /* Reset flex-basis, width property will take precedence */
+    width: 80vw;
+    max-width: 320px;
+    flex-basis: auto;
   }
 
   .gallery-track {
-    animation-name: scrollGalleryMobile; /* Use mobile-specific animation name if different duration/logic needed */
-    animation-duration: 40s; /* Can adjust duration for mobile */
+    animation-name: scrollGalleryMobile;
+    animation-duration: 40s;
   }
 
   @keyframes scrollGalleryMobile {
     0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); } /* Corrected: Should also be -50% for seamless loop with duplicates */
+    100% { transform: translateX(-50%); }
   }
 }
 
 
 /* Blog Section & General Section Styling */
 .section {
-  padding: 2rem 1rem; /* Default for smaller screens */
+  padding: 2rem 1rem;
   max-width: 900px;
   margin: 0 auto;
 }
 @media (min-width: 768px) {
   .section {
-    padding: 4rem 2rem; /* Restore for larger screens */
+    padding: 4rem 2rem;
   }
 }
 
 .section h2 {
-  font-size: clamp(1.5rem, 4vw, 2rem); /* Responsive font size */
+  font-size: clamp(1.5rem, 4vw, 2rem);
   margin-bottom: 1rem;
 }
 
 .blog-list {
   display: grid;
   gap: 2rem;
-  /* On small screens, grid defaults to single column which is good */
 }
 
 .blog-post {
@@ -383,7 +384,7 @@ p {
 
 .blog-post h3 {
   margin: 0 0 0.5rem;
-  font-size: clamp(1.1rem, 3vw, 1.4rem); /* Responsive blog post titles */
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
 }
 
 .blog-post .date {
@@ -394,14 +395,14 @@ p {
 /* Contact Page */
 .contact-section {
   background-color: #f3f8fe;
-  padding: 2rem 1rem; /* Default for smaller screens */
+  padding: 2rem 1rem;
   max-width: 800px;
   margin: auto;
   text-align: center;
 }
 @media (min-width: 768px) {
   .contact-section {
-    padding: 4rem 2rem; /* Restore for larger screens */
+    padding: 4rem 2rem;
   }
 }
 
@@ -415,17 +416,17 @@ p {
 .form-row {
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap; /* Ensures inputs stack on smaller screens */
+  flex-wrap: wrap;
 }
 
 .form-row input {
-  flex: 1 1 calc(50% - 0.5rem); /* Adjust for gap, ensures two inputs fit side-by-side if space allows */
-  min-width: 200px; /* Prevent inputs from becoming too small */
+  flex: 1 1 calc(50% - 0.5rem);
+  min-width: 200px;
 }
 
 .contact-form input,
 .contact-form textarea {
-  width: 100%; /* Fallback, flex properties on .form-row input will manage width */
+  width: 100%;
   padding: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -456,7 +457,7 @@ p {
 /* Footer */
 .site-footer {
   text-align: center;
-  padding: 2rem 1rem; /* Consistent padding */
+  padding: 2rem 1rem;
   font-size: 0.9rem;
   margin-top: auto;
   background-color: #0a2540;
@@ -505,17 +506,17 @@ p {
 }
 
 /* Timeline Sections */
-.timeline-section, .timeline-container { /* Consolidating common styles */
+.timeline-section, .timeline-container {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   max-width: 1200px;
-  margin: 0 auto; /* Changed from 'auto' to '0 auto' for consistency */
-  padding: 2rem 1rem; /* Default padding */
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 @media (min-width: 768px) {
   .timeline-section, .timeline-container {
-    padding: 3rem 1rem; /* Larger padding for larger screens */
+    padding: 3rem 1rem;
   }
 }
 
@@ -530,18 +531,16 @@ p {
 
 .timeline-column {
   flex: 1 1 45%;
-  min-width: 300px; /* Ensures columns don't get too narrow before stacking */
+  min-width: 300px;
 }
 
 .timeline-column h2 {
-  font-size: clamp(1.4rem, 3.5vw, 1.8rem); /* Responsive font size */
-  margin-bottom: 1.5rem; /* Consistent margin */
+  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+  margin-bottom: 1.5rem;
   color: #0a2540;
-  border-bottom: 2px solid #eee; /* Added for visual separation if desired */
+  border-bottom: 2px solid #eee;
   padding-bottom: 0.5rem;
 }
-/* If .timeline-container h2 needs different styling, specify: */
-/* .timeline-container .timeline-column h2 { ... } */
 
 
 .timeline-item {
@@ -576,12 +575,12 @@ p {
 }
 
 .timeline-content h3 {
-  font-size: clamp(1rem, 2.8vw, 1.2rem); /* Responsive timeline item titles */
+  font-size: clamp(1rem, 2.8vw, 1.2rem);
   margin-bottom: 0.3rem;
   color: #0a2540;
 }
 
-.timeline-content h3 span { /* Company/subtitle */
+.timeline-content h3 span {
   font-weight: 400;
   font-size: clamp(0.85rem, 2.2vw, 0.95rem);
   color: #444;
@@ -589,13 +588,12 @@ p {
   margin-top: 0.2rem;
 }
 
-.timeline-content p { /* Description */
+.timeline-content p {
   margin: 0.5rem 0 0;
   font-size: clamp(0.85rem, 2.3vw, 0.95rem);
-  line-height: 1.5; /* Increased line-height slightly for readability */
+  line-height: 1.5;
 }
 
-/* General span inside timeline-content (if used for other purposes) */
 .timeline-content span:not(h3 span) {
   display: block;
   font-weight: 400;
@@ -606,29 +604,24 @@ p {
 
 @media (max-width: 768px) {
   .timeline-section, .timeline-container {
-    flex-direction: column; /* Stack columns on mobile */
+    flex-direction: column;
     gap: 2rem;
   }
 
   .timeline-column {
-    flex: 1 1 100%; /* Column takes full width */
+    flex: 1 1 100%;
   }
-
-  /* .timeline-item structure remains flex-row, which is fine */
-  /* .timeline-content h3 span already 'block', can be 'inline' if preferred on mobile for shorter text */
-  /* .timeline-content h3 span { display: inline; } */
 }
 
 .timeline-logo {
   width: 48px;
   height: 48px;
-  /* Consider adding margin if it's part of .timeline-item and needs spacing */
 }
 
 .timeline-logo img {
-  width: 100%; /* Use 100% to fill the container */
+  width: 100%;
   height: 100%;
-  object-fit: contain; /* Ensures logo is scaled correctly within its box */
+  object-fit: contain;
 }
 
 .experience-logos {
@@ -636,18 +629,18 @@ p {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1.5rem; /* Spacing between logos */
-  padding: 1.5rem; /* Padding around the logo group */
+  gap: 1.5rem;
+  padding: 1.5rem;
   margin: 2rem auto 3rem;
   max-width: 900px;
-  background: #f0f0f0; /* Lighter background for contrast */
+  background: #f0f0f0;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .experience-logos img {
-  height: 40px; /* Default height */
-  max-width: 100px; /* Prevent very wide logos from taking too much space */
+  height: 40px;
+  max-width: 100px;
   object-fit: contain;
   transition: transform 0.3s ease;
 }
@@ -658,10 +651,10 @@ p {
 
 @media (max-width: 768px) {
   .experience-logos img {
-    height: 32px; /* Slightly smaller logos on mobile */
+    height: 32px;
   }
   .experience-logos {
-    gap: 1rem; /* Reduce gap on mobile */
+    gap: 1rem;
     padding: 1rem;
   }
 }
