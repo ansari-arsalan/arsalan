@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const hamburger = document.getElementById('hamburger');
   const navOverlay = document.getElementById('navOverlay');
   const nameElement = document.getElementById('animated-name');
+  const backToTop = document.getElementById('backToTop');
 
   hamburger?.addEventListener('click', () => {
     const expanded = hamburger.getAttribute('aria-expanded') === 'true';
@@ -53,5 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     type();
+  }
+
+  if (backToTop) {
+    window.addEventListener('scroll', () => {
+      backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 });

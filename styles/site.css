@@ -687,3 +687,23 @@ p {
     padding: 1rem;
   }
 }
+
+/* Back to Top Button */
+.back-to-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: var(--primary-color);
+  color: #fff;
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  display: none;
+  cursor: pointer;
+  z-index: 1000;
+  transition: background 0.3s ease;
+}
+
+.back-to-top:hover {
+  background: var(--hover-color);
+}
