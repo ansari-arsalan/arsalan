@@ -6,6 +6,7 @@
   --light-bg: #f9f9f9;
   --text-color: #222;
   --body-bg: #ffffff;
+  --logo-bar-bg: #0a2540;
 }
 *, *::before, *::after {
   box-sizing: border-box; /* More intuitive box model */
@@ -641,7 +642,7 @@ p {
   padding: 1.5rem;
   margin: 2rem auto 3rem;
   max-width: 900px;
-  background: #f0f0f0;
+  background: var(--logo-bar-bg);
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
