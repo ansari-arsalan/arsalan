@@ -42,6 +42,15 @@ p {
   z-index: 999;
 }
 
+/* About page uses a lighter header color */
+.about-header {
+  background: var(--hover-color);
+}
+
+.about-header .nav-overlay {
+  background: var(--hover-color);
+}
+
 .nav-container {
   display: flex;
   justify-content: space-between;
