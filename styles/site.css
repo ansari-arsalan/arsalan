@@ -42,14 +42,6 @@ p {
   z-index: 999;
 }
 
-/* About page uses a lighter header color */
-.about-header {
-  background: var(--hover-color);
-}
-
-.about-header .nav-overlay {
-  background: var(--hover-color);
-}
 
 .nav-container {
   display: flex;
@@ -671,7 +663,7 @@ p {
   padding: 1.5rem;
   margin: 2rem auto 3rem;
   max-width: 900px;
-  background: #f0f0f0;
+  background: var(--hover-color);
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
