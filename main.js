@@ -107,7 +107,7 @@
 })();
 
 (() => {
-  const sectionIds = ["about", "education", "highlights", "projects", "skills", "leadership", "contact"];
+  const sectionIds = ["about", "experience", "projects", "languages", "leadership", "contact"];
   const links = Array.from(document.querySelectorAll(".primary-nav a"));
   if (!links.length || !("IntersectionObserver" in window)) return;
 
@@ -144,25 +144,12 @@
 })();
 
 (() => {
-  const blocks = Array.from(document.querySelectorAll(".section-block"));
-  if (!blocks.length || !("IntersectionObserver" in window)) return;
-
-  let active = null;
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0))[0];
-
-      if (!visible) return;
-      if (active && active !== visible.target) active.classList.remove("is-focused");
-      visible.target.classList.add("is-focused");
-      active = visible.target;
-    },
-    { threshold: [0.2, 0.35, 0.55], rootMargin: "-12% 0px -28% 0px" }
-  );
-
-  blocks.forEach((block) => observer.observe(block));
+  // Pause ticker on hover/focus for accessibility
+  const ticker = document.querySelector('.hero-ticker');
+  const track = document.querySelector('.ticker-track');
+  if (!ticker || !track) return;
+  ticker.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
+  ticker.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
 })();
 
 (() => {
@@ -176,16 +163,14 @@
 
   const updateHeroFx = () => {
     const rect = hero.getBoundingClientRect();
-    const travel = Math.max(hero.offsetHeight * 0.85, 1);
+    const travel = Math.max(hero.offsetHeight * 0.8, 1);
     const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
 
-    const fade = 1 - progress * 0.95;
-    const scale = 1.02 + progress * 0.16;
-    const overlay = 0.66 - progress * 0.28;
+    const fade = 1 - progress * 0.9;
+    const scale = 1.02 + progress * 0.12;
 
     hero.style.setProperty("--hero-fade", fade.toFixed(3));
     hero.style.setProperty("--hero-scale", scale.toFixed(3));
-    hero.style.setProperty("--hero-overlay", overlay.toFixed(3));
 
     ticking = false;
   };
