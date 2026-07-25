@@ -12,6 +12,7 @@
   if (!toggle || !nav) return;
 
   const isOpen = () => document.body.classList.contains("menu-open");
+  const isMobile = () => window.innerWidth <= 760;
 
   const openMenu = () => {
     document.body.classList.add("menu-open");
@@ -22,7 +23,8 @@
   const closeMenu = () => {
     document.body.classList.remove("menu-open");
     toggle.setAttribute("aria-expanded", "false");
-    nav.setAttribute("aria-hidden", "true");
+    if (isMobile()) nav.setAttribute("aria-hidden", "true");
+    else nav.removeAttribute("aria-hidden");
   };
 
   toggle.addEventListener("click", () => {
@@ -42,68 +44,10 @@
   });
 
   window.addEventListener("resize", () => {
-    if (window.innerWidth > 760) closeMenu();
+    closeMenu();
   });
 
   closeMenu();
-})();
-
-(() => {
-  const root = document.documentElement;
-  const btn = document.getElementById("themeToggle");
-  if (!btn) return;
-
-  const icon = btn.querySelector(".theme-icon");
-  const media = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
-
-  const getSystemTheme = () => (media && media.matches ? "dark" : "light");
-  const getCurrent = () => root.getAttribute("data-theme") || getSystemTheme();
-
-  const renderIcon = () => {
-    const current = getCurrent();
-    if (icon) icon.textContent = current === "dark" ? "☀" : "☾";
-    btn.setAttribute("aria-label", current === "dark" ? "Switch to light mode" : "Switch to dark mode");
-  };
-
-  const saved = localStorage.getItem("theme");
-  if (saved === "light" || saved === "dark") {
-    root.setAttribute("data-theme", saved);
-  }
-  renderIcon();
-
-  btn.addEventListener("click", () => {
-    const next = getCurrent() === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
-    renderIcon();
-  });
-
-  if (media && media.addEventListener) {
-    media.addEventListener("change", () => {
-      if (!localStorage.getItem("theme")) renderIcon();
-    });
-  }
-})();
-
-(() => {
-  const revealEls = Array.from(document.querySelectorAll(".reveal"));
-  if (!revealEls.length || !("IntersectionObserver" in window)) {
-    revealEls.forEach((el) => el.classList.add("in"));
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("in");
-        observer.unobserve(entry.target);
-      });
-    },
-    { threshold: 0.18 }
-  );
-
-  revealEls.forEach((el) => observer.observe(el));
 })();
 
 (() => {
@@ -144,49 +88,6 @@
 })();
 
 (() => {
-  // Pause ticker on hover/focus for accessibility
-  const ticker = document.querySelector('.hero-ticker');
-  const track = document.querySelector('.ticker-track');
-  if (!ticker || !track) return;
-  ticker.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
-  ticker.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
-})();
-
-(() => {
-  const hero = document.querySelector(".hero");
-  if (!hero) return;
-
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduceMotion) return;
-
-  let ticking = false;
-
-  const updateHeroFx = () => {
-    const rect = hero.getBoundingClientRect();
-    const travel = Math.max(hero.offsetHeight * 0.8, 1);
-    const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
-
-    const fade = 1 - progress * 0.9;
-    const scale = 1.02 + progress * 0.12;
-
-    hero.style.setProperty("--hero-fade", fade.toFixed(3));
-    hero.style.setProperty("--hero-scale", scale.toFixed(3));
-
-    ticking = false;
-  };
-
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(updateHeroFx);
-  };
-
-  updateHeroFx();
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll);
-})();
-
-(() => {
   const chips = Array.from(document.querySelectorAll(".project-chip"));
   const cards = Array.from(document.querySelectorAll("#projectGrid .project-card"));
 
@@ -201,70 +102,13 @@
 
     cards.forEach((card) => {
       const tags = (card.dataset.tags || "").split(/\s+/).filter(Boolean);
-      const show = filter === "all" || tags.includes(filter);
-      card.dataset.hidden = show ? "false" : "true";
+      card.dataset.hidden = filter === "all" || tags.includes(filter) ? "false" : "true";
     });
   };
 
   chips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      applyFilter(chip.dataset.filter || "all");
-    });
+    chip.addEventListener("click", () => applyFilter(chip.dataset.filter || "all"));
   });
 
   applyFilter("all");
-})();
-
-(() => {
-  const copyButtons = Array.from(document.querySelectorAll(".copy-btn"));
-  const statusEl = document.getElementById("copyStatus");
-
-  if (!copyButtons.length || !statusEl) return;
-
-  const setStatus = (text) => {
-    statusEl.textContent = text;
-    window.clearTimeout(setStatus.timeout);
-    setStatus.timeout = window.setTimeout(() => {
-      statusEl.textContent = "";
-    }, 2200);
-  };
-
-  const fallbackCopy = (text) => {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
-    let ok = false;
-    try {
-      ok = document.execCommand("copy");
-    } catch {
-      ok = false;
-    }
-    document.body.removeChild(ta);
-    return ok;
-  };
-
-  copyButtons.forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const text = btn.dataset.copy || "";
-      if (!text) return;
-
-      let copied = false;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        try {
-          await navigator.clipboard.writeText(text);
-          copied = true;
-        } catch {
-          copied = fallbackCopy(text);
-        }
-      } else {
-        copied = fallbackCopy(text);
-      }
-
-      setStatus(copied ? `Copied: ${text}` : "Could not copy. Please copy manually.");
-    });
-  });
 })();
